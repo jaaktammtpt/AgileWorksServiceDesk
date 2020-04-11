@@ -39,5 +39,26 @@ namespace AgileWorksServiceDesk.Services
             return _mapper.Map<RequestDTO>(request);
         }
 
+        public async Task<RequestDTO> GetByIdAsync(int? id)
+        {
+            var request = await _context.Requests
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            return _mapper.Map<RequestDTO>(request);
+        }
+
+        public async Task<RequestDTO> UpdateAsync(RequestDTO requestDTO)
+        {
+            var request = _mapper.Map<Request>(requestDTO);
+            _context.Update(request);
+            await _context.SaveChangesAsync();
+
+            return _mapper.Map<RequestDTO>(request);
+        }
+
+        public async Task<bool> ExistAsync(int id)
+        {
+            return await _context.Requests.AnyAsync(e => e.Id == id);
+        }
     }
 }

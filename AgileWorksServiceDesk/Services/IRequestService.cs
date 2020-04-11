@@ -10,5 +10,8 @@ namespace AgileWorksServiceDesk.Services
     {
         Task<List<RequestDTO>> GetAllActiveRequests();
         Task<RequestDTO> CreateAsync(RequestDTO requestDTO);
+        Task<RequestDTO> GetByIdAsync(int? id);
+        Task<RequestDTO> UpdateAsync(RequestDTO requestDTO);
+        Task<bool> ExistAsync(int id);
     }
 }

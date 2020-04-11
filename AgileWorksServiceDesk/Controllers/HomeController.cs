@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using AgileWorksServiceDesk.Models;
 using AgileWorksServiceDesk.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace AgileWorksServiceDesk.Controllers
 {
@@ -55,6 +56,51 @@ namespace AgileWorksServiceDesk.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var request = await _service.GetByIdAsync(id);
+
+            if (request == null)
+            {
+                return NotFound();
+            }
+
+            return View(request);
+        }
+
+        // POST: Requests/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Description,DueDateTime,Complition")] RequestDTO requestDTO)
+        {
+            if (id != requestDTO.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await _service.UpdateAsync(requestDTO);
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!(await _service.ExistAsync(requestDTO.Id)))
+                    {
+                        return NotFound();
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(requestDTO);
         }
     }
 }
