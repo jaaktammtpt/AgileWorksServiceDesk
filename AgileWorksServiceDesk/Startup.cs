@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AgileWorksServiceDesk.Data;
 using AgileWorksServiceDesk.Helpers;
+using AgileWorksServiceDesk.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,6 +27,8 @@ namespace AgileWorksServiceDesk
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IRequestService, RequestService>();
+
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
