@@ -29,5 +29,15 @@ namespace AgileWorksServiceDesk.Services
 
             return _mapper.Map<List<RequestDTO>>(requests);
         }
+
+        public async Task<RequestDTO> CreateAsync(RequestDTO requestDTO)
+        {
+            var request = _mapper.Map<Request>(requestDTO);
+            _context.Add(request);
+            await _context.SaveChangesAsync();
+
+            return _mapper.Map<RequestDTO>(request);
+        }
+
     }
 }

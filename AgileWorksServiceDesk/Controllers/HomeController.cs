@@ -32,6 +32,25 @@ namespace AgileWorksServiceDesk.Controllers
             return View();
         }
 
+        // GET: Requests/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Requests/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,Description,DueDateTime,Complition")] RequestDTO requestDTO)
+        {
+            if (ModelState.IsValid)
+            {
+                await _service.CreateAsync(requestDTO);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(requestDTO);
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

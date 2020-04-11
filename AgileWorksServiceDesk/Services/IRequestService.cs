@@ -9,5 +9,6 @@ namespace AgileWorksServiceDesk.Services
     public interface IRequestService
     {
         Task<List<RequestDTO>> GetAllActiveRequests();
+        Task<RequestDTO> CreateAsync(RequestDTO requestDTO);
     }
 }

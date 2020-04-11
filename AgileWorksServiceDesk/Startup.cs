@@ -65,24 +65,21 @@ namespace AgileWorksServiceDesk
             });
 
             var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
-            using (var serviceScope = serviceScopeFactory.CreateScope())
+            using var serviceScope = serviceScopeFactory.CreateScope();
+            var dbContext = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+            dbContext.Database.EnsureCreated();
+
+            if (!dbContext.Requests.Any())
             {
-                var dbContext = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
-                dbContext.Database.EnsureCreated();
-
-                if (!dbContext.Requests.Any())
+                for (int i = 0; i < 20; i++)
                 {
-                    for (int i = 0; i < 20; i++)
+                    dbContext.Requests.Add(new Request
                     {
-                        dbContext.Requests.Add(new Request
-                        {
-                            Description = "Request no " + i,
-                            DueDateTime = DateTime.Now.AddHours(-5 + i)
-                        });
-                    }
-
-                    dbContext.SaveChanges();
+                        Description = "Request no " + i,
+                        DueDateTime = DateTime.Now.AddHours(-5 + i)
+                    });
                 }
+                dbContext.SaveChanges();
             }
         }
     }
