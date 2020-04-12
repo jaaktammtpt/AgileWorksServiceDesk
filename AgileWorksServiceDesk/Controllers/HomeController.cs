@@ -42,7 +42,7 @@ namespace AgileWorksServiceDesk.Controllers
         // POST: Requests/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Description,DueDateTime,Complition")] RequestDTO requestDTO)
+        public async Task<IActionResult> Create([Bind("Id,Description,DueDateTime")] RequestDTO requestDTO)
         {
             if (ModelState.IsValid)
             {
@@ -78,7 +78,7 @@ namespace AgileWorksServiceDesk.Controllers
         // POST: Requests/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Description,DueDateTime,Complition")] RequestDTO requestDTO)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Description,DueDateTime,Completed")] RequestDTO requestDTO)
         {
             if (id != requestDTO.Id)
             {

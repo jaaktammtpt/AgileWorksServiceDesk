@@ -8,7 +8,7 @@ namespace AgileWorksServiceDesk.Models
 {
     public class RequestDTO : BaseEntityDTO
     {
-        [Required, StringLength(50, MinimumLength = 8)]
+        [Required, StringLength(250, MinimumLength = 8)]
         public string Description { get; set; }
 
         [Required, DataType(DataType.DateTime), Display(Name = "Deadline")]
