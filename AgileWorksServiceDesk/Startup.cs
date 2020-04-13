@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using AgileWorksServiceDesk.Data;
@@ -15,6 +16,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace AgileWorksServiceDesk
 {
+    [ExcludeFromCodeCoverage]
     public class Startup
     {
         public Startup(IConfiguration configuration)

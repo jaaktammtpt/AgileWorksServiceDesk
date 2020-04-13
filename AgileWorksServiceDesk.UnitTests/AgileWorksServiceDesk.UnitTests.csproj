@@ -7,7 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="coverlet.msbuild" Version="2.8.0">
+    <Compile Remove="BuildReports\**" />
+    <EmbeddedResource Remove="BuildReports\**" />
+    <None Remove="BuildReports\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="1.2.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.msbuild" Version="2.8.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -19,12 +29,15 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="coverlet.collector" Version="1.2.0" />
     <PackageReference Include="XunitXml.TestLogger" Version="2.1.26" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AgileWorksServiceDesk\AgileWorksServiceDesk.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ControllerTests\" />
   </ItemGroup>
 
 </Project>
