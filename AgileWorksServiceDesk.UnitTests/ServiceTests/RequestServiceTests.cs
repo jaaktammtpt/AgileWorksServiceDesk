@@ -1,4 +1,5 @@
 ﻿using AgileWorksServiceDesk.Data;
+using AgileWorksServiceDesk.Models;
 using AgileWorksServiceDesk.Services;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,84 @@ namespace AgileWorksServiceDesk.UnitTests.ServiceTests
             Assert.NotNull(result);
             Assert.Equal(9, result.Count());
         }
+
+        [Fact]
+        public async Task GetByIdAsync_should_return_null_for_missing_request()
+        {
+            await InitRequestsListAsync();
+            var id = -1;
+
+            var result = await RequestServices.GetByIdAsync(id);
+
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task GetByIdAsync_should_return_model_for_existing_request()
+        {
+            await InitRequestsListAsync();
+            var id = 2;
+
+            var result = await RequestServices.GetByIdAsync(id);
+
+            Assert.NotNull(result);
+            Assert.Equal(id, result.Id);
+        }
+
+        [Fact]
+        public async Task ExistAsync_should_return_false_for_missing_request()
+        {
+            await InitRequestsListAsync();
+            var id = -1;
+
+            var result = await RequestServices.ExistAsync(id);
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public async Task ExistAsync_should_return_true_for_missing_request()
+        {
+            await InitRequestsListAsync();
+            var id = 2;
+
+            var result = await RequestServices.ExistAsync(id);
+
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task UpdateAsync_should_return_updated_model()
+        {
+            await InitRequestsListAsync();
+            var id = 2;
+
+            var request = await RequestServices.GetByIdAsync(id);
+
+            var update = new RequestDTO();
+            update.Completed = true;
+            update.Description = "Updated desc";
+            update.DueDateTime = request.DueDateTime;
+
+            var updatedData = await RequestServices.UpdateAsync(update);
+
+            Assert.True(updatedData.Completed);
+            Assert.Equal("Updated desc", updatedData.Description);
+        }
+
+        [Fact]
+        public async Task CreateAsync_should_return_created_model()
+        {
+            var request = new RequestDTO();
+            request.Description = "New request desc";
+            request.DueDateTime = DateTime.Now.AddHours(32);
+
+            var createdData = await RequestServices.CreateAsync(request);
+
+            Assert.NotNull(createdData);
+            Assert.Equal("New request desc", createdData.Description);
+        }
+
 
         private async Task InitRequestsListAsync()
         {
