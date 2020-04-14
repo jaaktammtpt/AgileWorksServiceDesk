@@ -36,8 +36,4 @@
     <ProjectReference Include="..\AgileWorksServiceDesk\AgileWorksServiceDesk.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ControllerTests\" />
-  </ItemGroup>
-
 </Project>

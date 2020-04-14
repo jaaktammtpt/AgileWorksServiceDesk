@@ -83,10 +83,12 @@ namespace AgileWorksServiceDesk.UnitTests.ServiceTests
 
             var request = await RequestServices.GetByIdAsync(id);
 
-            var update = new RequestDTO();
-            update.Completed = true;
-            update.Description = "Updated desc";
-            update.DueDateTime = request.DueDateTime;
+            var update = new RequestDTO
+            {
+                Completed = true,
+                Description = "Updated desc",
+                DueDateTime = request.DueDateTime
+            };
 
             var updatedData = await RequestServices.UpdateAsync(update);
 
@@ -97,9 +99,11 @@ namespace AgileWorksServiceDesk.UnitTests.ServiceTests
         [Fact]
         public async Task CreateAsync_should_return_created_model()
         {
-            var request = new RequestDTO();
-            request.Description = "New request desc";
-            request.DueDateTime = DateTime.Now.AddHours(32);
+            var request = new RequestDTO
+            {
+                Description = "New request desc",
+                DueDateTime = DateTime.Now.AddHours(32)
+            };
 
             var createdData = await RequestServices.CreateAsync(request);
 
