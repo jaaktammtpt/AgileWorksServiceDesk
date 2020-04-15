@@ -33,7 +33,7 @@ namespace AgileWorksServiceDesk.UnitTests.ControllerTests
         }
 
         [Fact]
-        public async Task Create_ValidData_Return_NotOkResult()
+        public async Task Create_InvalidData_should_return_NotOkResult()
         {
             var requestServiceMock = new Mock<IRequestService>();
             var logger = new Mock<ILogger<HomeController>>();
@@ -41,18 +41,16 @@ namespace AgileWorksServiceDesk.UnitTests.ControllerTests
             var controller = new HomeController(logger.Object, requestServiceMock.Object);
             controller.ModelState.AddModelError("Description", "Required");
 
-            var request = new RequestDTO();
-            
+            var request = new RequestDTO();            
 
             var result = await controller.Create(request);
-
 
             var viewResult = Assert.IsType<ViewResult>(result);
             Assert.IsAssignableFrom<RequestDTO>(viewResult.ViewData.Model);
         }
 
         [Fact]
-        public async Task Create_ValidData_Return_OkResult()
+        public async Task Create_ValidData_return_OkResult()
         {
             var requestServiceMock = new Mock<IRequestService>();
             var logger = new Mock<ILogger<HomeController>>();
@@ -70,7 +68,7 @@ namespace AgileWorksServiceDesk.UnitTests.ControllerTests
         }
 
         [Fact]
-        public void Create_return_view()
+        public void Create_should_return_create_view()
         {
             var requestServiceMock = new Mock<IRequestService>();
             var logger = new Mock<ILogger<HomeController>>();
@@ -82,5 +80,101 @@ namespace AgileWorksServiceDesk.UnitTests.ControllerTests
 
             Assert.True(string.IsNullOrEmpty(viewName) || viewName == "Create");
         }
+
+        [Fact]
+        public async Task Edit_should_return_BadRequest()
+        {
+            var requestServiceMock = new Mock<IRequestService>();
+            var logger = new Mock<ILogger<HomeController>>();
+
+            var controller = new HomeController(logger.Object, requestServiceMock.Object);
+            var id = (int?)null;
+
+            var result = await controller.Edit(id);
+
+            Assert.IsType<BadRequestResult>(result);
+        }
+
+        [Fact]
+        public async Task Edit_should_return_NotFound()
+        {
+            var requestServiceMock = new Mock<IRequestService>();
+            var logger = new Mock<ILogger<HomeController>>();
+            requestServiceMock.Setup(c => c.GetByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(() => null);
+
+            var controller = new HomeController(logger.Object, requestServiceMock.Object);
+
+            var id = -1;
+
+            var result = await controller.Edit(id);
+
+            Assert.IsType<NotFoundResult>(result);
+        }
+
+        [Fact]
+        public async Task Edit_should_return_view_with_existing_request()
+        {
+            var requestServiceMock = new Mock<IRequestService>();
+            var logger = new Mock<ILogger<HomeController>>();
+            var request = new RequestDTO();
+            requestServiceMock.Setup(c => c.GetByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(() => request);
+            var controller = new HomeController(logger.Object, requestServiceMock.Object);
+            var id = 5;
+
+            var result = await controller.Edit(id) as ViewResult;
+            var viewName = result.ViewName;
+
+            Assert.True(string.IsNullOrEmpty(viewName) || viewName == "Edit");
+            Assert.Equal(request, result.Model);
+        }
+
+        [Fact]
+        public async Task Edit_should_return_OkResult()
+        {
+            var requestServiceMock = new Mock<IRequestService>();
+            var logger = new Mock<ILogger<HomeController>>();
+            
+            var request = new RequestDTO();
+            requestServiceMock.Setup(c => c.GetByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(() => request);
+            var controller = new HomeController(logger.Object, requestServiceMock.Object);
+            //var id = request.Id;
+
+            var data = await controller.Edit(request);
+            Assert.IsType<RedirectToActionResult>(data);
+        }
+
+        [Fact]
+        public async Task Edit_InvalidData_should_return_edit_view()
+        {
+            var requestServiceMock = new Mock<IRequestService>();
+            var logger = new Mock<ILogger<HomeController>>();
+
+            var controller = new HomeController(logger.Object, requestServiceMock.Object);
+            controller.ModelState.AddModelError("Description", "Required");
+
+            var request = new RequestDTO();
+
+            var result = await controller.Edit(request);
+
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.IsAssignableFrom<RequestDTO>(viewResult.ViewData.Model);
+        }
+
+        [Fact]
+        public void Privacy_should_return_privacy_view()
+        {
+            var requestServiceMock = new Mock<IRequestService>();
+            var logger = new Mock<ILogger<HomeController>>();
+            var controller = new HomeController(logger.Object, requestServiceMock.Object);
+
+            var result = controller.Privacy() as ViewResult;
+            var viewName = result.ViewName;
+
+            Assert.True(string.IsNullOrEmpty(viewName) || viewName == "Privacy");
+        }
+
     }
 }

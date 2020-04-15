@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using AgileWorksServiceDesk.Models;
 using AgileWorksServiceDesk.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 
 namespace AgileWorksServiceDesk.Controllers
 {
@@ -52,7 +53,9 @@ namespace AgileWorksServiceDesk.Controllers
             return View(requestDTO);
         }
 
+        
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        [ExcludeFromCodeCoverage]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
@@ -62,10 +65,10 @@ namespace AgileWorksServiceDesk.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            var request = await _service.GetByIdAsync(id);
+            var request = await _service.GetByIdAsync(id.Value);
 
             if (request == null)
             {
@@ -78,29 +81,15 @@ namespace AgileWorksServiceDesk.Controllers
         // POST: Requests/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Description,DueDateTime,Completed")] RequestDTO requestDTO)
+        public async Task<IActionResult> Edit([Bind("Id,Description,DueDateTime,Completed")] RequestDTO requestDTO)
         {
-            if (id != requestDTO.Id)
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                return View(requestDTO);
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    await _service.UpdateAsync(requestDTO);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!(await _service.ExistAsync(requestDTO.Id)))
-                    {
-                        return NotFound();
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(requestDTO);
+            await _service.UpdateAsync(requestDTO);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
