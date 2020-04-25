@@ -9,7 +9,7 @@ namespace AgileWorksServiceDesk.Data
 {
     public class Request : BaseEntity
     {
-        [Required, StringLength(250, MinimumLength = 8)]
+        [Required(ErrorMessage = "Description is required"), StringLength(250, MinimumLength = 8) ]
         public string Description { get; set; }
 
         [Required, DataType(DataType.DateTime)]

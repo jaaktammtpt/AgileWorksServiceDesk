@@ -38,13 +38,24 @@ namespace AgileWorksServiceDesc.IntegrationTests
             if (dbContext.Database.GetDbConnection().ConnectionString.ToLower().Contains("mydb.db"))
             {
                 throw new Exception("LIVE SETTINGS IN TESTS!");
-            }
+            }            
 
             dbContext.Database.EnsureDeleted();
             dbContext.Database.EnsureCreated();
 
             Utilities.InitializeDbForTests(dbContext);
-
         }
+
+        public override void ConfigureServices(IServiceCollection services)
+        {
+            base.ConfigureServices(services);
+
+            services.AddAntiforgery(t =>
+            {
+                t.Cookie.Name = AntiForgeryTokenExtractor.AntiForgeryCookieName;
+                t.FormFieldName = AntiForgeryTokenExtractor.AntiForgeryFieldName;
+            });
+        }
+
     }
 }

@@ -25,12 +25,8 @@
         @foreach (var item in Model)
         {
             <tr class="@item.LateIndicator()">
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Convert.ToString(string.Format("{0:dd/MM/yyyy HH:mm}", item.DueDateTime))
-                </td>
+                <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                <td>@Convert.ToString(string.Format("{0:dd/MM/yyyy HH:mm}", item.DueDateTime))</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Update request</a>
                 </td>
